@@ -51,15 +51,42 @@ namespace ArrowSharp.Core.Tests
         }
 
         [Fact]
+        public void Given_LeftEither_Then_Fold_Applies_Left_Folder_Function()
+        {
+            Either.Left<int, int>(10).Fold(i => i * 2, s => 0).Should().Be(20);
+        }
+
+        [Fact]
+        public void Given_RightEither_Then_Fold_Applies_Right_Folder_Function()
+        {
+            Either.Right<int, int>(10).Fold(i => 0, s => s * 2).Should().Be(20);
+        }
+
+        [Fact]
         public void Given_LeftEither_Then_Swap_Should_Return_RightEither()
         {
             Either.Left<int, string>(10).Swap().IsRight.Should().BeTrue();
         }
 
         [Fact]
+        public void Given_LeftEither_Then_Swap_Should_Return_RightEither_With_Previous_Left_Value()
+        {
+            var defaultValue = -1;
+            Either.Left<int, string>(10).Swap().Right.GetOrElse(defaultValue).Should().Be(10);
+        }
+
+        [Fact]
         public void Given_RightEither_Then_Swap_Should_Return_LeftEither()
         {
             Either.Right<int, string>("Message").Swap().IsLeft.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Given_RightEither_Then_Swap_Should_Return_LeftEither_With_Previous_Right_Value()
+        {
+            var defaultValue = "";
+            var message = "Message";
+            Either.Right<int, string>(message).Swap().Left.GetOrElse(defaultValue).Should().Be(message);
         }
 
         [Fact]
@@ -139,6 +166,89 @@ namespace ArrowSharp.Core.Tests
         {
             Either.Left<int, string>(10).ToEnumerable().Any().Should().BeFalse();
         }
+
+        [Fact]
+        public void Given_LeftEither_Then_Catch_Should_Invoke_The_Catcher_Action_With_Left_Value()
+        {
+            int holder = 0;
+            Either.Left<int, string>(10).Catch(v => holder = v);
+            holder.Should().Be(10);
+        }
+
+        [Fact]
+        public void Given_RightEither_Then_Catch_Should_Do_Nothing()
+        {
+            int holder = 0;
+            Either.Right<int, string>("Ok").Catch(v => holder = v);
+            holder.Should().Be(0);
+        }
+
+        [Fact]
+        public void Given_RightEither_Then_Map_Should_Return_A_New_Right_Either_With_Value_Mapped()
+        {
+            var defaultValue = -1;
+            Either.Right<int, double>(10.5).Map(r => (int)r).GetOrElse(defaultValue).Should().Be(10);
+        }
+
+        [Fact]
+        public void Given_LeftEither_Then_Map_Should_Return_A_New_LeftEither()
+        {
+            Either.Left<int, double>(10).Map(r => (int)r).IsLeft.Should().BeTrue();
+        }
+        [Fact]
+        public void Given_LeftEither_Then_Map_Should_Return_A_New_LeftEither_With_Same_Value()
+        {
+            var defaultValue = -1;
+            Either.Left<int, double>(10).Map(r => (int)r).Left.GetOrElse(defaultValue).Should().Be(10);
+        }
+
+        [Fact]
+        public void Given_LeftEither_Then_MapLeft_Should_Return_A_New_LeftEither()
+        {
+            Either.Left<int, double>(10).MapLeft(l => l * 2).IsLeft.Should().BeTrue();
+        }
+        
+        [Fact]
+        public void Given_LeftEither_Then_MapLeft_Should_Return_A_New_LeftEither_With_New_Value()
+        {
+            var defaultValue = -1;
+            Either.Left<int, double>(10).MapLeft(l => l * 2).Left.GetOrElse(defaultValue).Should().Be(20);
+        }
+
+        [Fact]
+        public void Given_RightEither_Then_MapLeft_Should_Return_A_New_RightEither_With_Same_Value()
+        {
+            var defaultValue = 0.5;
+            Either.Right<int, double>(10.5).MapLeft(l => l * 2).GetOrElse(defaultValue).Should().Be(10.5);
+        }
+
+        [Fact]
+        public void Given_False_Predicate_Then_Cond_Should_Return_A_LeftEither()
+        {
+            Either.Cond(() => false, () => 10, () => 20).IsLeft.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Given_False_Predicate_Then_Cond_Should_Return_A_LeftEither_With_The_Value_Generated()
+        {
+            var defaultValue = -1;
+            Either.Cond(() => false, () => 10, () => 20).Left.GetOrElse(defaultValue).Should().Be(10);
+        }
+
+        [Fact]
+        public void Given_True_Predicate_Then_Cond_Should_Return_A_RightEither()
+        {
+            Either.Cond(() => true, () => 10, () => 20).IsRight.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Given_True_Predicate_Then_Cond_Should_Return_A_RightEither_With_The_Value_Generated()
+        {
+            var defaultValue = -1;
+            Either.Cond(() => true, () => 10, () => 20).Right.GetOrElse(defaultValue).Should().Be(20);
+        }
+
+
 
     }
 }

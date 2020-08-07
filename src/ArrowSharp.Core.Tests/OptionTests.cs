@@ -111,5 +111,32 @@ namespace ArrowSharp.Core.Tests
             Option.FromEither(either).IsNone.Should().BeTrue();
         }
 
+        [Fact]
+        public void Given_SomeNone_Then_FlatMap_Should_Return_A_None()
+        {
+            Option.None<int>().FlatMap(i => Option.Some(i)).IsNone.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Given_SomeOption_Then_FlatMap_Should_Return_A_New_SomeOption_With_New_Value()
+        {
+            var defaultValue = 0;
+            Option.Some(100).FlatMap(i => Option.Some(i * 2)).GetOrElse(defaultValue).Should().Be(200);
+        }
+
+        [Fact]
+        public void Given_SomeOption_Then_FlatMap_Should_Return_A_None_If_Mapper_Returns_A_None()
+        {
+            Option.Some(100).FlatMap(i => Option.None<int>()).IsNone.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Given_An_Id_Then_Option_Some_Should_Return_Unwrapped_Option()
+        {
+            var value = "somevalue";
+            var id = Id.Just(value);
+            Option.Some(id).GetOrElse("").Should().Be(value);
+        }
+
     }
 }

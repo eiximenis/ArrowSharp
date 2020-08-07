@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Transactions;
 using ArrowSharp.Core;
 
@@ -6,26 +8,45 @@ namespace DemoApp
 {
     class Program
     {
-        static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
+            Console.WriteLine("ArrowSharp some demos...");
+            Help();
+
             while (true)
             {
-                Console.WriteLine("Enter an ID to see its customer (only ID 1 is ok)");
-                var sid = Console.ReadLine();
-                if (int.TryParse(sid, out var id))
+                var sid = Console.ReadLine().Trim();
+                if (sid == "?") Help();
+                else
                 {
-                    if (id == 0) return;
-                    var customer = GetCustomer(id);
-                    Console.WriteLine("Name is " + customer.Map(ci => ci.Name).GetOrElse("No customer found"));
+                    if (int.TryParse(sid, out var id))
+                    {
+                        switch (id)
+                        {
+                            case 1: Demo1.Run(); Help(); break;
+                            case 2: Demo2.Run(); Help(); break;
+                            case 3: Demo3.Run(); Help(); break;
+                            case 9: await DemoBlog.Run(); Help(); break;
+                            case 0: return;
+                            default:
+                                Console.WriteLine("Invalid Option. Type ? for Help");
+                                break;
+                        }
+                    }
                 }
             }
         }
 
-
-        public static Option<CustomerInfo> GetCustomer(int id)
+        static void Help()
         {
-            if (id == 1) return new CustomerInfo() { Id = 1, Name = "Eiximenis" };
-            else return null;
+            Console.WriteLine("Press :");
+            Console.WriteLine("? For help");
+            Console.WriteLine("1 For Demo1.Run - Either");
+            Console.WriteLine("2 For Demo2.Run - Option & ID");
+            Console.WriteLine("3 For Demo3.Run - IEnumerable Unwrap");
+            Console.WriteLine("9 For DemoBlog.Run");
+            Console.WriteLine("0 To Exit");
         }
+
     }
 }
