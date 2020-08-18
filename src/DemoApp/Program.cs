@@ -26,6 +26,7 @@ namespace DemoApp
                             case 1: Demo1.Run(); Help(); break;
                             case 2: Demo2.Run(); Help(); break;
                             case 3: Demo3.Run(); Help(); break;
+                            case 4: Demo4.Run(); Help(); break;
                             case 9: await DemoBlog.Run(); Help(); break;
                             case 0: return;
                             default:
@@ -44,6 +45,7 @@ namespace DemoApp
             Console.WriteLine("1 For Demo1.Run - Either");
             Console.WriteLine("2 For Demo2.Run - Option & ID");
             Console.WriteLine("3 For Demo3.Run - IEnumerable Unwrap");
+            Console.WriteLine("4 For Demo4.Run - Unit");
             Console.WriteLine("9 For DemoBlog.Run");
             Console.WriteLine("0 To Exit");
         }

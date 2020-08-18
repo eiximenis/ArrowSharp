@@ -9,17 +9,19 @@ namespace ArrowSharp.Core
 {
     public static class Id
     {
-        public static Id<T> Just<T>(T value) => new Id<T>(value);
+        public static Id<T> Just<T>(in T value) => new Id<T>(in value);
 
-        public static Id<T> Just<T>(Id<T> value) => new Id<T>(value.Extract());
+        public static Id<T> Just<T>(in Id<T> value) => new Id<T>(value.Extract());
 
-        public static Id<T> Just<T>(Option<T> value)
+        public static Id<Unit> Just(in Unit value) => new Id<Unit>(in value, isnull: true);
+
+        public static Id<T> Just<T>(in Option<T> value)
         {
             if (value.IsNone) return None<T>();
             return Just(value.GetOrElse(default));
         }
 
-        public static Id<T> Just<L,T>(Either<L,T> either)
+        public static Id<T> Just<L,T>(in Either<L,T> either)
         {
             if (either.IsLeft) return None<T>();
             return Just(either.Right);
@@ -33,12 +35,12 @@ namespace ArrowSharp.Core
         private readonly T _value;
         private bool IsNone { get; }
 
-        internal Id(T value) { 
+        internal Id(in T value) { 
             _value = value;
             IsNone = (value is null);
         }
 
-        internal Id(T value, bool isnull)
+        internal Id(in T value, bool isnull)
         {
             _value = value;
             IsNone = isnull;

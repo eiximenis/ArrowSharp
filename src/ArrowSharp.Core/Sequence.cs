@@ -9,7 +9,7 @@ namespace ArrowSharp.Core
 {
     public static class Sequence
     {
-        public static Sequence<T> Of<T>(params T[] elements) => Of(elements.AsEnumerable());
+        public static Sequence<T> Of<T>(params T[] elements) => Of(elements.Where(x => !(x is null)));
         public static Sequence<T> Of<T>(IEnumerable<T> elements) => new Sequence<T>(elements);
 
         public static Sequence<T> Of<T>(params Option<T>[] elements) => Of(elements.AsEnumerable());

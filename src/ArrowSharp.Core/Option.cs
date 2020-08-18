@@ -11,17 +11,19 @@ namespace ArrowSharp.Core
 
     public static class Option
     {
-        public static Option<T> Some<T>(T value) => new Option<T>(value);
+        public static Option<T> Some<T>(in T value) => new Option<T>(in value);
         public static Option<T> None<T>() => new Option<T>();
 
-        public static Option<T> Some<T>(Id<T> value)
+        public static Option<Unit> Some(in Unit _) => None<Unit>();
+
+        public static Option<T> Some<T>(in Id<T> value)
         {
             return Some(value.Extract());
         }
 
-        public static Option<T> Some<T>(Option<T> value) => value.IsNone ? None<T>() : value;
+        public static Option<T> Some<T>(in Option<T> value) => value.IsNone ? None<T>() : value;
 
-        public static Option<T> FromEither<_, T>(Either<_, T> value) => value.IsRight ? value.Right : None<T>();
+        public static Option<T> FromEither<_, T>(in Either<_, T> value) => value.IsRight ? value.Right : None<T>();
     }
 
 
@@ -38,10 +40,11 @@ namespace ArrowSharp.Core
 
 
         public bool IsNone { get => !_hasValue; }
+        public bool IsSome { get => _hasValue; }
 
         public OptionType Type { get => IsNone ? OptionType.None : OptionType.Some; }
 
-        internal Option(T value)
+        internal Option(in T value)
         {
             switch (value)
             {

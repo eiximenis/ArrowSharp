@@ -42,5 +42,12 @@ namespace ArrowSharp.Core.Tests
             var arr = new[] { "one", null, "three", "four", null };
             Sequence.Of(arr).Count.Should().Be(arr.Length - 2);
         }
+
+        [Fact]
+        public void Given_An_Array_With_Units_Then_Of_Should_Create_An_Empty_Sequence()
+        {
+            var arr = new[] { Unit.Value, Unit.Value, Unit.Value };
+            Sequence.Of(arr).IsEmpty.Should().BeTrue();
+        }
     }
 }

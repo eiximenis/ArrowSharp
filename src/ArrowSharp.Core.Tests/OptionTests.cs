@@ -138,5 +138,11 @@ namespace ArrowSharp.Core.Tests
             Option.Some(id).GetOrElse("").Should().Be(value);
         }
 
+        [Fact]
+        public void Given_A_Unit_Then_Option_Some_Should_Return_A_None()
+        {
+            Option.Some(Unit.Value).IsNone.Should().BeTrue();
+        }
+
     }
 }

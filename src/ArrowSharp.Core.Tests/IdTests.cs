@@ -123,5 +123,11 @@ namespace ArrowSharp.Core.Tests
             Id.Just(Either.Right<int, int>(value)).Extract().Should().Be(value);
         }
 
+        [Fact]
+        public void Given_A_Unit_Then_Just_Should_Return_A_Null_Id()
+        {
+            Id.Just(Unit.Value).ToOption().IsNone.Should().BeTrue();
+        }
+
     }
 }
