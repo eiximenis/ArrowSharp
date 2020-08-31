@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArrowSharp.Core
 {
-    public class Unit
+    public class Unit : IEquatable<Unit>
     {
         static Unit()
         {
@@ -12,8 +12,11 @@ namespace ArrowSharp.Core
         }
         public static Unit Value { get; private set; }
         private Unit() { }
-        public override string ToString() => string.Empty;
+        public override string ToString() => nameof(Unit);
         public override int GetHashCode() => 1;
-        public override bool Equals(object obj) => false;
-    }
+        public override bool Equals(object obj) => obj is Unit;
+        public bool Equals(Unit other) => true;
+        public static bool operator ==(Unit one, Unit two) => true;
+        public static bool operator !=(Unit one, Unit two) => false;
+    } 
 }

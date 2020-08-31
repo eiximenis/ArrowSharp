@@ -23,7 +23,7 @@ namespace ArrowSharp.Core.Tests
         [Fact]
         public void Given_Option_Created_Using_Null_Value_Then_It_Should_Be_Empty_Option()
         {
-            Option.Some<string>(null).IsNone.Should().BeTrue();
+            Option.Some((string)null).IsNone.Should().BeTrue();
         }
 
         [Fact]
@@ -142,6 +142,12 @@ namespace ArrowSharp.Core.Tests
         public void Given_A_Unit_Then_Option_Some_Should_Return_A_None()
         {
             Option.Some(Unit.Value).IsNone.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Given_A_Unit_Then_Option_Some_Should_Return_A_None_For_Any_Type()
+        {
+            Option.Some<int>(Unit.Value).IsNone.Should().BeTrue();
         }
 
     }

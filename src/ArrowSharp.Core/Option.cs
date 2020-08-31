@@ -9,12 +9,23 @@ using System.Text;
 namespace ArrowSharp.Core
 {
 
+    public static class Options
+    { 
+        public static IEnumerable<Option<T>> Of<T>(params T[] values) => Of(values);
+        public static IEnumerable<Option<T>> Of<T>(IEnumerable<T> values)
+        {
+            foreach (var value in values) yield return Option.Some(value);
+        }
+    }
+
     public static class Option
     {
         public static Option<T> Some<T>(in T value) => new Option<T>(in value);
         public static Option<T> None<T>() => new Option<T>();
 
         public static Option<Unit> Some(in Unit _) => None<Unit>();
+
+        public static Option<T> Some<T>(in Unit _) => None<T>();
 
         public static Option<T> Some<T>(in Id<T> value)
         {
@@ -46,6 +57,13 @@ namespace ArrowSharp.Core
 
         internal Option(in T value)
         {
+            if  (value is Unit)
+            {
+                _hasValue = false;
+                _value = value;
+                return;
+            }
+
             switch (value)
             {
                 case null:

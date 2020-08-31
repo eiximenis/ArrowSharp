@@ -7,13 +7,24 @@ using System.Text;
 
 namespace ArrowSharp.Core
 {
+
+
+    public static class Ids
+    {
+        public static IEnumerable<Id<T>> Of<T>(params T[] values) => Of(values);
+        public static IEnumerable<Id<T>> Of<T>(IEnumerable<T> values)
+        {
+            foreach (var value in values) yield return Id.Just(value);
+        }
+    }
+
     public static class Id
     {
         public static Id<T> Just<T>(in T value) => new Id<T>(in value);
 
         public static Id<T> Just<T>(in Id<T> value) => new Id<T>(value.Extract());
 
-        public static Id<Unit> Just(in Unit value) => new Id<Unit>(in value, isnull: true);
+        public static Id<T> Just<T>(in Unit _) => None<T>();
 
         public static Id<T> Just<T>(in Option<T> value)
         {
@@ -37,7 +48,7 @@ namespace ArrowSharp.Core
 
         internal Id(in T value) { 
             _value = value;
-            IsNone = (value is null);
+            IsNone = (value is null) || (value is Unit);
         }
 
         internal Id(in T value, bool isnull)

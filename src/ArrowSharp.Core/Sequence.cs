@@ -9,7 +9,7 @@ namespace ArrowSharp.Core
 {
     public static class Sequence
     {
-        public static Sequence<T> Of<T>(params T[] elements) => Of(elements.Where(x => !(x is null)));
+        public static Sequence<T> Of<T>(params T[] elements) => Of(elements.Where(x => !(x is null) && !(x is Unit)));
         public static Sequence<T> Of<T>(IEnumerable<T> elements) => new Sequence<T>(elements);
 
         public static Sequence<T> Of<T>(params Option<T>[] elements) => Of(elements.AsEnumerable());
@@ -61,7 +61,7 @@ namespace ArrowSharp.Core
     {
         private readonly T[] _data;
 
-        public bool IsEmpty { get => _data != null || _data.Length == 0; }
+        public bool IsEmpty { get => _data == null || _data.Length == 0; }
 
         public int Count { get => _data?.Length ?? 0; }
 

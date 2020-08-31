@@ -49,5 +49,15 @@ namespace ArrowSharp.Core.Tests
             var arr = new[] { Unit.Value, Unit.Value, Unit.Value };
             Sequence.Of(arr).IsEmpty.Should().BeTrue();
         }
+
+        [Fact]
+        public void Given_An_Array_With_Units_Then_Of_Should_Create_Sequence_Without_Units()
+        {
+            int f1() => 42;
+            Unit f2() => Unit.Value;
+            int f3() => 60;
+            var seq = Sequence.Of(Option.Some(f1()), Option.Some<int>(f2()), Option.Some(f3()));
+            seq.Count.Should().Be(2);
+        }
     }
 }
