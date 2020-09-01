@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Transactions;
 using ArrowSharp.Core;
 
+using ArrowSharp.Core.Extensions;
+
 namespace DemoApp
 {
     class Program

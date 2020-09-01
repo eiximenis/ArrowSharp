@@ -7,15 +7,23 @@ using System.Threading.Tasks;
 
 namespace ArrowSharp.Core
 {
-    public static class Either 
+    public static class Either
     {
-        public static Either<L, R> Right<L, R>(R value) => new Either<L, R>(default(L), value, isRight: true);
-        public static Either<L, R> Left<L, R>(L value) => new Either<L, R>(value, default(R), isRight: false);
+        public static Either<L, R> Right<L, R>(R value) => new Either<L, R>(default, value, isRight: true);
+        public static Either<L, R> FromOption<L, R>(Option<R> value, L left = default) => new Either<L, R>(left, value.GetOrDefault(), isRight: value.IsSome);
+        public static Either<L, R> Left<L, R>(L value) => new Either<L, R>(value, default, isRight: false);
         public static Either<L, R> Cond<L, R>(Func<bool> predicate, Func<L> left, Func<R> right) => predicate() ? Right<L, R>(right()) : Left<L, R>(left());
+
+        public static Either<L, R> Right<L, R>(Id<R> value) => Right<L, R>(value.Extract());
+        public static Either<L, R> Left<L, R>(Id<L> value) => Left<L, R>(value.Extract());
+
+        public static Either<L, R> FromId<L, R>(Id<R> value, L left = default) => new Either<L, R>(left, value.Extract(), isRight: !value.IsNone);
+
         public static async Task<Either<L, R>> RightAsync<L, R>(Task<R> value) => Right<L, R>(await value.ConfigureAwait(false));
         public static async Task<Either<L, R>> LeftAsync<L, R>(Task<L> value) => Left<L, R>(await value.ConfigureAwait(false));
         public static async Task<Either<L, R>> CondAsync<L, R>(Func<bool> predicate, Func<Task<L>> left, Func<Task<R>> right) =>
             predicate() ? Right<L, R>(await right().ConfigureAwait(false)) : Left<L, R>(await left().ConfigureAwait(false));
+
     }
 
 
@@ -25,7 +33,7 @@ namespace ArrowSharp.Core
         Right
     }
 
-    public struct Either<L,R>
+    public struct Either<L, R>
     {
         private readonly L _left;
         private readonly R _right;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArrowSharp.Core
 {
-    public class Unit : IEquatable<Unit>
+    public sealed class Unit : IEquatable<Unit>
     {
         static Unit()
         {

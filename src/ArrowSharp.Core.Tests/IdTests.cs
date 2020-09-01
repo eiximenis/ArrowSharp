@@ -65,6 +65,22 @@ namespace ArrowSharp.Core.Tests
         }
 
         [Fact]
+        public void Given_An_Id_Then_CoFlatMap_Should_Return_Another_Id_With_Mapped_Value()
+        {
+            int value = 42;
+            int expectedValue = 43;
+            Id.Just(value).CoFlatMap(i => i.Extract() + 1).Extract().Should().Be(43);
+        }
+
+        [Fact]
+        public void Given_A_Null_Id_Then_CoFlatMap_Should_Return_A_Another_Id_With_Default_Value()
+        {
+            string value = null;
+            int defaultIntValue = default;
+            Id.Just(value).CoFlatMap(i => int.Parse(i.Extract())).Extract().Should().Be(defaultIntValue);
+        }
+
+        [Fact]
         public void Given_A_Null_Id_Then_Should_Be_Equal_To_Another_Null_Id_Of_The_Same_Type()
         {
             string value = null;

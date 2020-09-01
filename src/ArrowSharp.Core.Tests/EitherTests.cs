@@ -248,7 +248,72 @@ namespace ArrowSharp.Core.Tests
             Either.Cond(() => true, () => 10, () => 20).Right.GetOrElse(defaultValue).Should().Be(20);
         }
 
+        [Fact]
+        public void Given_A_Some_Option_Then_FromOption_Should_Return_A_RightEither()
+        {
+            var message = "no number defined";
+            var value = 42;
+            var option = Option.Some(value);
+            Either.FromOption(option, message).IsRight.Should().BeTrue();
+        }
 
+        [Fact]
+        public void Given_A_Some_Option_Then_FromOption_Should_Return_A_RightEither_With_The_Option_Value()
+        {
+            var message = "no number defined";
+            var value = 42;
+            var option = Option.Some(value);
+            Either.FromOption(option, message).Right.ForceGet().Should().Be(value);
+        }
+
+        [Fact]
+        public void Given_A_None_Then_FromOption_Should_Return_A_LeftEither()
+        {
+            var message = "no number defined";
+            var option = Option.None<int>();
+            Either.FromOption(option, message).IsLeft.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Given_A_None_Then_FromOption_Should_Return_A_LeftEither_With_Value_Specified()
+        {
+            var message = "no number defined";
+            var option = Option.None<int>();
+            Either.FromOption(option, message).Left.ForceGet().Should().Be(message);
+        }
+
+        [Fact]
+        public void Given_A_Id_Then_Left_Should_Return_A_LeftEither_With_Id_Extracted_Value()
+        {
+            var value = 42;
+            var id = Id.Just(value);
+            Either.Left<int, int>(id).Left.ForceGet().Should().Be(value);
+        }
+
+        [Fact]
+        public void Given_A_Id_Then_Right_Should_Return_A_RightEither_With_Id_Extracted_Value()
+        {
+            var value = 42;
+            var id = Id.Just(value);
+            Either.Right<int, int>(id).Right.ForceGet().Should().Be(value);
+        }
+
+        [Fact]
+        public void Given_A_Id_Then_FromId_Should_Return_A_RightEither_With_Id_Extracted_Value()
+        {
+            var defaultValue = -1;
+            var value = 42;
+            var id = Id.Just(value);
+            Either.FromId(id, defaultValue).Right.ForceGet().Should().Be(value);
+        }
+
+        [Fact]
+        public void Given_A_Null_Id_Then_FromId_Should_Return_A_LeftEither_With_Value_Specified()
+        {
+            var defaultValue = 42;
+            var id = Id.Just((string)null);
+            Either.FromId(id, defaultValue).Left.ForceGet().Should().Be(defaultValue);
+        }
 
     }
 }

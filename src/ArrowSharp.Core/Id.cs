@@ -44,7 +44,7 @@ namespace ArrowSharp.Core
     public readonly struct Id<T> : IEquatable<Id<T>>
     {
         private readonly T _value;
-        private bool IsNone { get; }
+        internal bool IsNone { get; }
 
         internal Id(in T value) { 
             _value = value;
@@ -60,6 +60,8 @@ namespace ArrowSharp.Core
         public Id<R> Map<R>(Func<T, R> mapper) => IsNone ? Id.None<R>() : Id.Just(mapper(_value));
 
         public Id<R> FlatMap<R>(Func<T, Id<R>> mapper) => IsNone ? Id.None<R>() : Id.Just(mapper(_value));
+
+        public Id<R> CoFlatMap<R>(Func<Id<T>, R> mapper) => IsNone ? Id.None<R>() : Id.Just(mapper(this));
 
         public IEnumerable<T> ToEnumerable()
         {

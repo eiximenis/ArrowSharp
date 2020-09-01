@@ -81,6 +81,10 @@ namespace ArrowSharp.Core
 
         public T GetOrElse(T emptyValue) => IsNone ? emptyValue : _value;
 
+        public T GetOrDefault() => IsNone ? default : _value;
+
+        public T ForceGet() => IsNone ? throw new InvalidOperationException("Option is None") : _value;
+
         public T Fold(T emptyValue, Func<T, T> folder) => IsNone ? emptyValue : folder(_value);
 
         public Option<U> FlatMap<U>(Func<T, Option<U>> mapper)
