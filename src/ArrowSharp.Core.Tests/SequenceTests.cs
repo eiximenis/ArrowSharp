@@ -59,5 +59,12 @@ namespace ArrowSharp.Core.Tests
             var seq = Sequence.Of(Option.Some(f1()), Option.Some<int>(f2()), Option.Some(f3()));
             seq.Count.Should().Be(2);
         }
+
+        [Fact]
+        public void Given_A_Range_Then_Of_Should_Create_Sequence_With_All_Values()
+        {
+            var seq = Sequence.Of(1..3);
+            seq.Count.Should().Be(3);
+        }
     }
 }

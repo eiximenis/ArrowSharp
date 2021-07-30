@@ -9,13 +9,23 @@ using ArrowSharp.Core.Extensions;
 
 namespace DemoApp
 {
+
+
+    record Street(string Name, int Number);
+    record Address(Street Street, string City);
+
     class Program
     {
         public async static Task Main(string[] args)
         {
-            Console.WriteLine("ArrowSharp some demos...");
-            Help();
-
+            /*
+            var address = new Address(new Street("Main Street", 40), "Igualada");
+            var streetNumberLens = new Lens<Street, int>(s => s.Number, (s, n) => s with { Number= n });
+            var addressStreetLens = new Lens<Address, Street>(a => a.Street, (a, s) => a with { Street = s });
+            var addressNumberLens = Lens.Compose(addressStreetLens, streetNumberLens);
+            var number = addressNumberLens.Get(address);   // number is 40
+            var newAddress = addressNumberLens.Set(address, 30);
+            */
             while (true)
             {
                 var sid = Console.ReadLine().Trim();

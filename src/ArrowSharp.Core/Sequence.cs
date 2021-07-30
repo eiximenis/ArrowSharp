@@ -54,25 +54,34 @@ namespace ArrowSharp.Core
             return new Sequence<T>(els);
         }
 
+        public static Sequence<int> Of(Range range) => new Sequence<int>(Enumerable.Range(range.Start.Value, range.End.Value));
+
+        public static Sequence<T> OfSpan<T>(ReadOnlySpan<T> span) => new Sequence<T>(span);
+
     }
 
 
-    public class Sequence<T> : IEnumerable<T>
+    public sealed class Sequence<T> : IEnumerable<T>
     {
         private readonly T[] _data;
 
-        public bool IsEmpty { get => _data == null || _data.Length == 0; }
+        public bool IsEmpty { get => _data.Length == 0; }
 
-        public int Count { get => _data?.Length ?? 0; }
+        public int Count { get => _data.Length; }
+
+        internal Sequence(ReadOnlySpan<T> span)
+        {
+            _data = span.ToArray();
+        }
 
         internal Sequence(IEnumerable<T> elements)
         {
-            _data = elements?.ToArray() ?? null;
+            _data = elements?.ToArray() ?? Array.Empty<T>();
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _data?.AsEnumerable().GetEnumerator() ?? Enumerable.Empty<T>().GetEnumerator();
+            return _data.AsEnumerable().GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();

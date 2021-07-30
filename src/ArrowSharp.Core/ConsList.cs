@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace ArrowSharp.Core
 
     }
 
-    public sealed class ConsList<T>
+    public sealed class ConsList<T> : IEnumerable<T>
     {
         public T Head { get; }
         public ConsList<T> Tail { get; }
@@ -36,5 +37,21 @@ namespace ArrowSharp.Core
             Head = head;
             Tail = tail;
         }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            if (IsEmpty) yield break;
+            else
+            {
+                yield return Head;
+                if (Tail != null)
+                {
+                    foreach (var item in Tail) { yield return item; }
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        
     }
 }
